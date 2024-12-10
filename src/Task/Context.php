@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -8,7 +10,7 @@
 
 namespace Deployer\Task;
 
-use Deployer\Configuration\Configuration;
+use Deployer\Configuration;
 use Deployer\Exception\Exception;
 use Deployer\Host\Host;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,15 +18,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Context
 {
-    /**
-     * @var Host
-     */
-    private $host;
+    private Host $host;
 
     /**
      * @var Context[]
      */
-    private static $contexts = [];
+    private static array $contexts = [];
 
     public function __construct(Host $host)
     {
@@ -41,11 +40,7 @@ class Context
         return !empty(self::$contexts);
     }
 
-    /**
-     * @return Context|false
-     * @throws Exception
-     */
-    public static function get()
+    public static function get(): Context
     {
         if (empty(self::$contexts)) {
             throw new Exception("Context was requested but was not available.");

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -16,9 +18,9 @@ use Deployer\Collection\Collection;
  */
 class TaskCollection extends Collection
 {
-    protected function throwNotFound(string $name): void
+    protected function notFound(string $name): \InvalidArgumentException
     {
-        throw new \InvalidArgumentException("Task `$name` not found.");
+        return new \InvalidArgumentException("Task `$name` not found.");
     }
 
     public function add(Task $task): void

@@ -13,11 +13,8 @@ require 'contrib/yarn.php';
 
 
 ## Configuration
-
 - **bin/yarn** *(optional)*: set Yarn binary, automatically detected otherwise.
-
 ## Usage
-
 ```php
 after('deploy:update_code', 'yarn:install');
 ```
@@ -25,9 +22,14 @@ after('deploy:update_code', 'yarn:install');
 
 ## Configuration
 ### bin/yarn
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yarn.php#L15)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yarn.php#L16)
 
-
+## Configuration
+- **bin/yarn** *(optional)*: set Yarn binary, automatically detected otherwise.
+## Usage
+```php
+after('deploy:update_code', 'yarn:install');
+```
 
 ```php title="Default value"
 return which('yarn');
@@ -37,8 +39,8 @@ return which('yarn');
 
 ## Tasks
 
-### yarn:install
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yarn.php#L21)
+### yarn\:install {#yarn-install}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yarn.php#L22)
 
 Installs Yarn packages.
 

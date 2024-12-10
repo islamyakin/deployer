@@ -12,9 +12,7 @@ require 'contrib/sentry.php';
 
 
 
-
 ### Configuration options
-
 - **organization** *(required)*: the slug of the organization the release belongs to.
 - **projects** *(required)*: array of slugs of the projects to create a release for.
 - **token** *(required)*: authentication token. Can be created at [https://sentry.io/settings/account/api/auth-tokens/]
@@ -40,10 +38,8 @@ unless it's a first release, then only first 200 will be sent.
 - **date_deploy_finished** *(optional)* - date that indicates when the deploy ended. If not provided, the current time is used.
 - **deploy_name** *(optional)* - name of the deploy
 - **git_version_command** *(optional)* - the command that retrieves the git version information (Defaults is set to git log -n 1 --format="%h", other options are git describe --tags --abbrev=0)
-
 ```php
 deploy.php
-
 set('sentry', [
     'organization' => 'exampleorg',
     'projects' => [
@@ -51,20 +47,14 @@ set('sentry', [
     ],
     'token' => 'd47828...',
     'version' => '0.0.1',
-
 ]);
 ```
-
 ### Suggested Usage
-
 Since you should only notify Sentry of a successful deployment, the deploy:sentry task should be executed right at the end.
-
 ```php
 deploy.php
-
 after('deploy', 'deploy:sentry');
 ```
-
 
 
 

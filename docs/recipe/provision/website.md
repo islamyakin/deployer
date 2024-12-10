@@ -13,17 +13,17 @@ require 'recipe/provision/website.php';
 
 ## Configuration
 ### domain
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L4)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L7)
 
 
 
 ```php title="Default value"
-return ask(' Domain: ');
+return ask(' Domain: ', get('hostname'));
 ```
 
 
 ### public_path
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L8)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L11)
 
 
 
@@ -35,24 +35,32 @@ return ask(' Public path: ', 'public');
 
 ## Tasks
 
-### provision:website
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L13)
+### provision\:server {#provision-server}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L16)
+
+Configures a server.
+
+
+
+
+### provision\:website {#provision-website}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L25)
 
 Provision website.
 
 
 
 
-### logs:caddy
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L82)
+### logs\:access {#logs-access}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L69)
 
-Shows caddy logs.
-
-
+Shows access logs.
 
 
-### logs:caddy:syslog
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L87)
+
+
+### logs\:caddy {#logs-caddy}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision/website.php#L74)
 
 Shows caddy syslog.
 

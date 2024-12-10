@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 require __DIR__ . '/provision.php';
@@ -6,6 +7,7 @@ require __DIR__ . '/deploy/check_remote.php';
 require __DIR__ . '/deploy/cleanup.php';
 require __DIR__ . '/deploy/clear_paths.php';
 require __DIR__ . '/deploy/copy_dirs.php';
+require __DIR__ . '/deploy/env.php';
 require __DIR__ . '/deploy/info.php';
 require __DIR__ . '/deploy/lock.php';
 require __DIR__ . '/deploy/push.php';
@@ -28,6 +30,12 @@ add('recipes', ['common']);
 // otherwise output of `whoami` command.
 set('user', function () {
     if (getenv('CI') !== false) {
+        $ciUserVars = ['GITLAB_USER_NAME', 'GITHUB_ACTOR', 'CIRCLE_USERNAME', 'DRONE_BUILD_TRIGGER'];
+        foreach ($ciUserVars as $var) {
+            if (($ciUser = getenv($var)) !== false) {
+                return $ciUser;
+            }
+        }
         return 'ci';
     }
 
@@ -140,6 +148,7 @@ task('deploy:prepare', [
     'deploy:lock',
     'deploy:release',
     'deploy:update_code',
+    'deploy:env',
     'deploy:shared',
     'deploy:writable',
 ]);
@@ -171,8 +180,7 @@ task('deploy:success', function () {
 /**
  * Hook on deploy failure.
  */
-task('deploy:failed', function () {
-})
+task('deploy:failed', function () {})
     ->hidden();
 
 fail('deploy', 'deploy:failed');

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -12,44 +14,26 @@ use Deployer\Exception\HttpieException;
 
 class Httpie
 {
-    /**
-     * @var string
-     */
-    private $method = 'GET';
-    /**
-     * @var string
-     */
-    private $url = '';
-    /**
-     * @var array
-     */
-    private $headers = [];
-    /**
-     * @var string
-     */
-    private $body = '';
-    /**
-     * @var array
-     */
-    private $curlopts = [];
-    /**
-     * @var bool
-     */
-    private $nothrow = false;
+    private string $method = 'GET';
+    private string $url = '';
+    private array $headers = [];
+    private string $body = '';
+    private array $curlopts = [];
+    private bool $nothrow = false;
 
     public function __construct()
     {
         if (!extension_loaded('curl')) {
             throw new \Exception(
                 "Please, install curl extension.\n" .
-                "https://goo.gl/yTAeZh"
+                "https://php.net/curl.installation",
             );
         }
     }
 
     public static function get(string $url): Httpie
     {
-        $http = new self;
+        $http = new self();
         $http->method = 'GET';
         $http->url = $url;
         return $http;
@@ -57,24 +41,24 @@ class Httpie
 
     public static function post(string $url): Httpie
     {
-        $http = new self;
+        $http = new self();
         $http->method = 'POST';
         $http->url = $url;
         return $http;
     }
-    
+
     public static function patch(string $url): Httpie
     {
-        $http = new self;
+        $http = new self();
         $http->method = 'PATCH';
         $http->url = $url;
         return $http;
     }
 
-    
+
     public static function put(string $url): Httpie
     {
-        $http = new self;
+        $http = new self();
         $http->method = 'PUT';
         $http->url = $url;
         return $http;
@@ -82,79 +66,71 @@ class Httpie
 
     public static function delete(string $url): Httpie
     {
-        $http = new self;
+        $http = new self();
         $http->method = 'DELETE';
         $http->url = $url;
         return $http;
     }
-    
-    public function query(array $params): Httpie
+
+    public function query(array $params): self
     {
-        $http = clone $this;
-        $http->url .= '?' . http_build_query($params);
-        return $http;
+        $this->url .= '?' . http_build_query($params);
+        return $this;
     }
 
-    public function header(string $header, string $value): Httpie
+    public function header(string $header, string $value): self
     {
-        $http = clone $this;
-        $http->headers[$header] = $value;
-        return $http;
+        $this->headers[$header] = $value;
+        return $this;
     }
 
-    public function body(string $body): Httpie
+    public function body(string $body): self
     {
-        $http = clone $this;
-        $http->body = $body;
-        $http->headers = array_merge($http->headers, [
-            'Content-Type' => 'application/json',
-            'Content-Length' => strlen($http->body),
+        $this->body = $body;
+        $this->headers = array_merge($this->headers, [
+            'Content-Length' => strlen($this->body),
         ]);
-        return $http;
+        return $this;
     }
 
-    public function jsonBody(array $data): Httpie
+    public function jsonBody(array $data): self
     {
-        $http = clone $this;
-        $http->body = json_encode($data, JSON_PRETTY_PRINT);
-        $http->headers = array_merge($http->headers, [
+        $this->body = json_encode($data, JSON_PRETTY_PRINT);
+        $this->headers = array_merge($this->headers, [
             'Content-Type' => 'application/json',
-            'Content-Length' => strlen($http->body),
+            'Content-Length' => strlen($this->body),
         ]);
-        return $http;
+        return $this;
     }
 
-    public function formBody(array $data): Httpie
+    public function formBody(array $data): self
     {
-        $http = clone $this;
-        $http->body = http_build_query($data);
-        $http->headers = array_merge($this->headers, [
+        $this->body = http_build_query($data);
+        $this->headers = array_merge($this->headers, [
             'Content-type' => 'application/x-www-form-urlencoded',
-            'Content-Length' => strlen($http->body),
+            'Content-Length' => strlen($this->body),
         ]);
-        return $http;
+        return $this;
     }
 
     /**
      * @param mixed $value
      */
-    public function setopt(int $key, $value): Httpie
+    public function setopt(int $key, $value): self
     {
-        $http = clone $this;
-        $http->curlopts[$key] = $value;
-        return $http;
+        $this->curlopts[$key] = $value;
+        return $this;
     }
 
-    public function nothrow(bool $on = true): Httpie
+    public function nothrow(bool $on = true): self
     {
-        $http = clone $this;
-        $http->nothrow = $on;
-        return $http;
+        $this->nothrow = $on;
+        return $this;
     }
 
     public function send(?array &$info = null): string
     {
-        if($this->url === '') {
+        if ($this->url === '') {
             throw new \RuntimeException('URL must not be empty to Httpie::send()');
         }
         $ch = curl_init($this->url);
@@ -190,17 +166,14 @@ class Httpie
         return $result;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getJson()
+    public function getJson(): mixed
     {
         $result = $this->send();
         $response = json_decode($result, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new HttpieException(
                 'JSON Error: ' . json_last_error_msg() . '\n' .
-                'Response: ' . $result
+                'Response: ' . $result,
             );
         }
         return $response;

@@ -13,46 +13,34 @@ require 'contrib/discord.php';
 
 
 ## Installing
-
 Add hook on deploy:
-
 ```php
 before('deploy', 'discord:notify');
 ```
-
 ## Configuration
-
 - `discord_channel` – Discord channel ID, **required**
 - `discord_token` – Discord channel token, **required**
-
 - `discord_notify_text` – notification message template, markdown supported, default:
   ```markdown
-  :&#8203;information_source: **{{user}}** is deploying branch `{{branch}}` to _{{target}}_
+  :&#8203;information_source: **{{user}}** is deploying branch `{{branch}}` to _{{where}}_
   ```
 - `discord_success_text` – success template, default:
   ```markdown
-  :&#8203;white_check_mark: Branch `{{branch}}` deployed to _{{target}}_ successfully
+  :&#8203;white_check_mark: Branch `{{branch}}` deployed to _{{where}}_ successfully
   ```
 - `discord_failure_text` – failure template, default:
   ```markdown
-  :&#8203;no_entry_sign: Branch `{{branch}}` has failed to deploy to _{{target}}_
-
+  :&#8203;no_entry_sign: Branch `{{branch}}` has failed to deploy to _{{where}}_
 ## Usage
-
 If you want to notify only about beginning of deployment add this line only:
-
 ```php
 before('deploy', 'discord:notify');
 ```
-
 If you want to notify about successful end of deployment add this too:
-
 ```php
 after('deploy:success', 'discord:notify:success');
 ```
-
 If you want to notify about failed deployment add this too:
-
 ```php
 after('deploy:failed', 'discord:notify:failure');
 ```
@@ -60,7 +48,7 @@ after('deploy:failed', 'discord:notify:failure');
 
 ## Configuration
 ### discord_webhook
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L53)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L54)
 
 
 
@@ -70,43 +58,43 @@ return 'https://discordapp.com/api/webhooks/{{discord_channel}}/{{discord_token}
 
 
 ### discord_notify_text
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L58)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L59)
 
 Deploy messages
 
 ```php title="Default value"
 return [
-'text' => parse(':&#8203;information_source: **{{user}}** is deploying branch `{{branch}}` to _{{target}}_'),
+'text' => parse(':&#8203;information_source: **{{user}}** is deploying branch `{{what}}` to _{{where}}_'),
 ];
 ```
 
 
 ### discord_success_text
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L63)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L64)
 
 
 
 ```php title="Default value"
 return [
-'text' => parse(':&#8203;white_check_mark: Branch `{{branch}}` deployed to _{{target}}_ successfully'),
+'text' => parse(':&#8203;white_check_mark: Branch `{{what}}` deployed to _{{where}}_ successfully'),
 ];
 ```
 
 
 ### discord_failure_text
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L68)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L69)
 
 
 
 ```php title="Default value"
 return [
-'text' => parse(':&#8203;no_entry_sign: Branch `{{branch}}` has failed to deploy to _{{target}}_'),
+'text' => parse(':&#8203;no_entry_sign: Branch `{{what}}` has failed to deploy to _{{where}}_'),
 ];
 ```
 
 
 ### discord_message
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L75)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L76)
 
 The message
 
@@ -118,40 +106,40 @@ The message
 
 ## Tasks
 
-### discord_send_message
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L78)
+### discord_send_message {#discord_send_message}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L79)
 
 
 
 Helpers
 
 
-### discord:test
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L86)
+### discord\:test {#discord-test}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L87)
 
 Tests messages.
 
 Tasks
 
 
-### discord:notify
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L97)
+### discord\:notify {#discord-notify}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L98)
 
 Notifies Discord.
 
 
 
 
-### discord:notify:success
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L105)
+### discord\:notify\:success {#discord-notify-success}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L106)
 
 Notifies Discord about deploy finish.
 
 
 
 
-### discord:notify:failure
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L113)
+### discord\:notify\:failure {#discord-notify-failure}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/discord.php#L114)
 
 Notifies Discord about deploy failure.
 

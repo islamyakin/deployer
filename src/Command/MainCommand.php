@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -8,7 +10,6 @@
 
 namespace Deployer\Command;
 
-use Deployer\Configuration\Configuration;
 use Deployer\Deployer;
 use Deployer\Exception\Exception;
 use Deployer\Exception\GracefulShutdownException;
@@ -19,8 +20,6 @@ use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Input\InputInterface as Input;
 use Symfony\Component\Console\Input\InputOption as Option;
 use Symfony\Component\Console\Output\OutputInterface as Output;
-use function Deployer\Support\find_config_line;
-use function Deployer\warning;
 
 class MainCommand extends SelectCommand
 {
@@ -46,43 +45,43 @@ class MainCommand extends SelectCommand
             'option',
             'o',
             Option::VALUE_REQUIRED | Option::VALUE_IS_ARRAY,
-            'Set configuration option'
+            'Set configuration option',
         );
         $this->addOption(
             'limit',
             'l',
             Option::VALUE_REQUIRED,
-            'How many tasks to run in parallel?'
+            'How many tasks to run in parallel?',
         );
         $this->addOption(
             'no-hooks',
             null,
             Option::VALUE_NONE,
-            'Run tasks without after/before hooks'
+            'Run tasks without after/before hooks',
         );
         $this->addOption(
             'plan',
             null,
             Option::VALUE_NONE,
-            'Show execution plan'
+            'Show execution plan',
         );
         $this->addOption(
             'start-from',
             null,
             Option::VALUE_REQUIRED,
-            'Start execution from this task'
+            'Start execution from this task',
         );
         $this->addOption(
             'log',
             null,
             Option::VALUE_REQUIRED,
-            'Write log to a file'
+            'Write log to a file',
         );
         $this->addOption(
             'profile',
             null,
             Option::VALUE_REQUIRED,
-            'Write profile to a file'
+            'Write profile to a file',
         );
     }
 
@@ -127,8 +126,6 @@ class MainCommand extends SelectCommand
 
         if (!$plan) {
             $this->checkUpdates();
-            $this->deployer->server->start();
-
             if (!empty($skippedTasks)) {
                 foreach ($skippedTasks as $taskName) {
                     $output->writeln("<fg=yellow;options=bold>skip</> $taskName");

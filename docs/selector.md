@@ -1,11 +1,11 @@
 # Selector
 
-Deployer uses the selector to choose hosts. Each host can have a set of labels. 
-Labels are key-value pairs. 
+Deployer uses the selector to choose hosts. Each host can have a set of labels.
+Labels are key-value pairs.
 
-For example, `stage: production` or `role: web`. 
+For example, `stage: production` or `role: web`.
 
-You can use labels to select hosts. For example, `dep deploy stage=production` 
+You can use labels to select hosts. For example, `dep deploy stage=production`
 will deploy to all hosts with `stage: production` label.
 
 Let's define two labels, **type** and **env**, to our hosts:
@@ -23,6 +23,7 @@ host('db.example.com')
         'env' => 'prod',
     ]);
 ```
+or use `->addLables()` method to add labels to the existing host.
 
 Now let's define a task to check labels:
 
@@ -52,8 +53,8 @@ task info
 
 ## Selector syntax
 
-Label syntax is represented by [disjunctive normal form](https://en.wikipedia.org/wiki/Disjunctive_normal_form) 
-(**OR of ANDs**).
+Selector syntax consists of a list of conditions, separated by `,` or `&`. There comma means **OR**
+and `&` means **AND**.
 
 For example, `type=web,env=prod` is a selector of: `type=web` **OR** `env=prod`.
 
@@ -75,6 +76,16 @@ task info
 [web.example.com] type:web env:prod
 ```
 
+We can use `|` to define **OR** in a subquery. For example, `type=web|db & env=prod` is a selector
+for hosts with (`type: web` **OR** `type: db`) **AND** `env: prod` labels.
+
+```bash
+$ dep info 'type=web|db & env=prod'
+task info
+[web.example.com] type:web env:prod
+[db.example.com] type:db env:prod
+```
+
 We can also use `!=` to negate a label. For example, `type!=web` is a selector for
 all hosts which do not have a `type: web` label.
 
@@ -84,8 +95,8 @@ task info
 [db.example.com] type:db env:prod
 ```
 
-:::note 
-Deployer CLI can take a few selectors as arguments. For example, 
+:::note
+Deployer CLI can take a few selectors as arguments. For example,
 `dep info type=web env=prod` is the same as `dep info 'type=web,env=prod'`.
 
 You can install bash autocompletion for Deployer CLI, which will help you to
@@ -119,7 +130,7 @@ You can use the [select()](api.md#select) function to select hosts by selector i
 
 ```php
 task('info', function () {
-    $hosts = select('type=web,env=prod');
+    $hosts = select('type=web|db,env=prod');
     foreach ($hosts as $host) {
         writeln('type:' . $host->get('labels')['type'] . ' env:' . $host->get('labels')['env']);
     }
@@ -143,7 +154,7 @@ To restrict a task to run only on selected hosts, you can use the [select()](tas
 ```php
 task('info', function () {
     // ...
-})->select('type=web,env=prod');
+})->select('type=web|db,env=prod');
 ```
 
 ## Labels in YAML

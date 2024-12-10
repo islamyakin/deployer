@@ -12,57 +12,45 @@ require 'contrib/yammer.php';
 
 
 
-
 Add hook on deploy:
-
 ```php
 before('deploy', 'yammer:notify');
 ```
-
 ## Configuration
-
 - `yammer_url` – The URL to the message endpoint, default is https://www.yammer.com/api/v1/messages.json
 - `yammer_token` *(required)* – Yammer auth token
 - `yammer_group_id` *(required)* - Group ID
 - `yammer_title` – the title of application, default `{{application}}`
 - `yammer_body` – notification message template, default:
   ```
-  <em>{{user}}</em> deploying {{branch}} to <strong>{{target}}</strong>
+  <em>{{user}}</em> deploying {{what}} to <strong>{{where}}</strong>
   ```
 - `yammer_success_body` – success template, default:
   ```
-  Deploy to <strong>{{target}}</strong> successful
+  Deploy to <strong>{{where}}</strong> successful
   ```
 - `yammer_failure_body` – failure template, default:
   ```
-  Deploy to <strong>{{target}}</strong> failed
+  Deploy to <strong>{{where}}</strong> failed
   ```
-
 ## Usage
-
 If you want to notify only about beginning of deployment add this line only:
-
 ```php
 before('deploy', 'yammer:notify');
 ```
-
 If you want to notify about successful end of deployment add this too:
-
 ```php
 after('deploy:success', 'yammer:notify:success');
 ```
-
 If you want to notify about failed deployment add this too:
-
 ```php
 after('deploy:failed', 'yammer:notify:failure');
 ```
 
 
-
 ## Configuration
 ### yammer_url
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L54)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L55)
 
 
 
@@ -72,7 +60,7 @@ after('deploy:failed', 'yammer:notify:failure');
 
 
 ### yammer_title
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L57)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L58)
 
 Title of project
 
@@ -82,56 +70,56 @@ return get('application', 'Project');
 
 
 ### yammer_body
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L62)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L63)
 
 Deploy message
 
 ```php title="Default value"
-'<em>{{user}}</em> deploying {{branch}} to <strong>{{target}}</strong>'
+'<em>{{user}}</em> deploying {{what}} to <strong>{{where}}</strong>'
 ```
 
 
 ### yammer_success_body
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L63)
-
-
-
-```php title="Default value"
-'Deploy to <strong>{{target}}</strong> successful'
-```
-
-
-### yammer_failure_body
 [Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L64)
 
 
 
 ```php title="Default value"
-'Deploy to <strong>{{target}}</strong> failed'
+'Deploy to <strong>{{where}}</strong> successful'
+```
+
+
+### yammer_failure_body
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L65)
+
+
+
+```php title="Default value"
+'Deploy to <strong>{{where}}</strong> failed'
 ```
 
 
 
 ## Tasks
 
-### yammer:notify
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L67)
+### yammer\:notify {#yammer-notify}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L68)
 
 Notifies Yammer.
 
 
 
 
-### yammer:notify:success
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L86)
+### yammer\:notify\:success {#yammer-notify-success}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L87)
 
 Notifies Yammer about deploy finish.
 
 
 
 
-### yammer:notify:failure
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L105)
+### yammer\:notify\:failure {#yammer-notify-failure}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/yammer.php#L106)
 
 Notifies Yammer about deploy failure.
 

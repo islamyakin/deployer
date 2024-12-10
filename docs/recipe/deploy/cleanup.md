@@ -13,7 +13,7 @@ require 'recipe/deploy/cleanup.php';
 
 ## Configuration
 ### cleanup_use_sudo
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/cleanup.php#L5)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/cleanup.php#L6)
 
 Use sudo in deploy:cleanup task for rm command.
 
@@ -25,8 +25,8 @@ false
 
 ## Tasks
 
-### deploy:cleanup
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/cleanup.php#L8)
+### deploy\:cleanup {#deploy-cleanup}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/cleanup.php#L9)
 
 Cleanup old releases.
 

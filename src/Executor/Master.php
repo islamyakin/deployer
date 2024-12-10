@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -8,12 +10,12 @@
 
 namespace Deployer\Executor;
 
-use Deployer\Component\Ssh\Client;
-use Deployer\Component\Ssh\IOArguments;
 use Deployer\Deployer;
 use Deployer\Host\Host;
-use Deployer\Host\Localhost;
+use Deployer\Host\HostCollection;
 use Deployer\Selector\Selector;
+use Deployer\Ssh\IOArguments;
+use Deployer\Task\Context;
 use Deployer\Task\Task;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,47 +26,27 @@ const FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '
 
 function spinner(string $message = ''): string
 {
-    $frame = FRAMES[(int) ((new \DateTime)->format('u') / 1e5) % count(FRAMES)];
+    $frame = FRAMES[(int) ((int) (new \DateTime())->format('u') / 1e5) % count(FRAMES)];
     return "  $frame $message\r";
 }
 
 class Master
 {
-    /**
-     * @var InputInterface
-     */
-    private $input;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * @var Server
-     */
-    private $server;
-
-    /**
-     * @var Messenger
-     */
-    private $messenger;
-
-    /**
-     * @var false|string
-     */
-    private $phpBin;
+    private HostCollection $hosts;
+    private InputInterface $input;
+    private OutputInterface $output;
+    private Messenger $messenger;
+    private string|false $phpBin;
 
     public function __construct(
+        HostCollection  $hosts,
         InputInterface  $input,
         OutputInterface $output,
-        Server          $server,
-        Messenger       $messenger
-    )
-    {
+        Messenger       $messenger,
+    ) {
+        $this->hosts = $hosts;
         $this->input = $input;
         $this->output = $output;
-        $this->server = $server;
         $this->messenger = $messenger;
         $this->phpBin = (new PhpExecutableFinder())->find();
     }
@@ -75,7 +57,7 @@ class Master
      */
     public function run(array $tasks, array $hosts, ?Planner $plan = null): int
     {
-        $globalLimit = (int)$this->input->getOption('limit') ?: count($hosts);
+        $globalLimit = (int) $this->input->getOption('limit') ?: count($hosts);
 
         foreach ($tasks as $task) {
             if (!$plan) {
@@ -94,7 +76,7 @@ class Master
                         break;
                     }
                 }
-            } else if ($task->isOncePerNode()) {
+            } elseif ($task->isOncePerNode()) {
                 $plannedHosts = [];
                 foreach ($hosts as $currentHost) {
                     if (Selector::apply($task->getSelector(), $currentHost)) {
@@ -181,19 +163,14 @@ class Master
             return 0;
         }
 
-        $callback = function (string $output) {
-            $output = preg_replace('/\n$/', '', $output);
-            if (strlen($output) !== 0) {
-                $this->output->writeln($output);
-            }
-        };
+        $server = new Server('127.0.0.1', 0, $this->output);
 
         /** @var Process[] $processes */
         $processes = [];
 
-        $this->server->loop->futureTick(function () use (&$processes, $hosts, $task) {
+        $server->afterRun(function (int $port) use (&$processes, $hosts, $task) {
             foreach ($hosts as $host) {
-                $processes[] = $this->createProcess($host, $task);
+                $processes[] = $this->createProcess($host, $task, $port);
             }
 
             foreach ($processes as $process) {
@@ -201,23 +178,61 @@ class Master
             }
         });
 
-        $this->server->loop->addPeriodicTimer(0.03, function ($timer) use (&$processes, $callback) {
-            $this->gatherOutput($processes, $callback);
+        $echoCallback = function (string $output) {
+            $output = preg_replace('/\n$/', '', $output);
+            if (strlen($output) !== 0) {
+                $this->output->writeln($output);
+            }
+        };
+
+        $server->ticker(function () use (&$processes, $server, $echoCallback) {
+            $this->gatherOutput($processes, $echoCallback);
             if ($this->output->isDecorated() && !getenv('CI')) {
                 $this->output->write(spinner());
             }
             if ($this->allFinished($processes)) {
-                $this->server->loop->stop();
-                $this->server->loop->cancelTimer($timer);
+                $server->stop();
             }
         });
 
-        $this->server->loop->run();
+        $server->router(function (string $path, array $payload) {
+            switch ($path) {
+                case '/load':
+                    ['host' => $host] = $payload;
+
+                    $host = $this->hosts->get($host);
+                    $config = $host->config()->persist();
+
+                    return new Response(200, $config);
+
+                case '/save':
+                    ['host' => $host, 'config' => $config] = $payload;
+
+                    $host = $this->hosts->get($host);
+                    $host->config()->update($config);
+
+                    return new Response(200, true);
+
+                case '/proxy':
+                    ['host' => $host, 'func' => $func, 'arguments' => $arguments] = $payload;
+
+                    Context::push(new Context($this->hosts->get($host)));
+                    $answer = call_user_func($func, ...$arguments);
+                    Context::pop();
+
+                    return new Response(200, $answer);
+
+                default:
+                    return new Response(404, null);
+            }
+        });
+
+        $server->run();
 
         if ($this->output->isDecorated() && !getenv('CI')) {
             $this->output->write("    \r"); // clear spinner
         }
-        $this->gatherOutput($processes, $callback);
+        $this->gatherOutput($processes, $echoCallback);
 
         if ($this->cumulativeExitCode($processes) !== 0) {
             $this->messenger->endTask($task, true);
@@ -226,11 +241,11 @@ class Master
         return $this->cumulativeExitCode($processes);
     }
 
-    protected function createProcess(Host $host, Task $task): Process
+    protected function createProcess(Host $host, Task $task, int $port): Process
     {
         $command = [
             $this->phpBin, DEPLOYER_BIN,
-            'worker', '--port', $this->server->getPort(),
+            'worker', '--port', $port,
             '--task', $task,
             '--host', $host->getAlias(),
         ];

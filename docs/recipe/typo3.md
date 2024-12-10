@@ -28,27 +28,28 @@ Additionally, Deployer has a lot of other features, like:
 You can read more about Deployer in [Getting Started](/docs/getting-started.md).
 
 The [deploy](#deploy) task of **TYPO3** consists of:
-* [deploy:prepare](/docs/recipe/common.md#deployprepare) – Prepares a new release
-  * [deploy:info](/docs/recipe/deploy/info.md#deployinfo) – Displays info about deployment
-  * [deploy:setup](/docs/recipe/deploy/setup.md#deploysetup) – Prepares host for deploy
-  * [deploy:lock](/docs/recipe/deploy/lock.md#deploylock) – Locks deploy
-  * [deploy:release](/docs/recipe/deploy/release.md#deployrelease) – Prepares release
-  * [deploy:update_code](/docs/recipe/deploy/update_code.md#deployupdate_code) – Updates code
-  * [deploy:shared](/docs/recipe/deploy/shared.md#deployshared) – Creates symlinks for shared files and dirs
-  * [deploy:writable](/docs/recipe/deploy/writable.md#deploywritable) – Makes writable dirs
-* [deploy:vendors](/docs/recipe/deploy/vendors.md#deployvendors) – Installs vendors
-* [deploy:publish](/docs/recipe/common.md#deploypublish) – Publishes the release
-  * [deploy:symlink](/docs/recipe/deploy/symlink.md#deploysymlink) – Creates symlink to release
-  * [deploy:unlock](/docs/recipe/deploy/lock.md#deployunlock) – Unlocks deploy
-  * [deploy:cleanup](/docs/recipe/deploy/cleanup.md#deploycleanup) – Cleanup old releases
-  * [deploy:success](/docs/recipe/common.md#deploysuccess) – 
+* [deploy:prepare](/docs/recipe/common.md#deploy-prepare) – Prepares a new release
+  * [deploy:info](/docs/recipe/deploy/info.md#deploy-info) – Displays info about deployment
+  * [deploy:setup](/docs/recipe/deploy/setup.md#deploy-setup) – Prepares host for deploy
+  * [deploy:lock](/docs/recipe/deploy/lock.md#deploy-lock) – Locks deploy
+  * [deploy:release](/docs/recipe/deploy/release.md#deploy-release) – Prepares release
+  * [deploy:update_code](/docs/recipe/deploy/update_code.md#deploy-update_code) – Updates code
+  * [deploy:env](/docs/recipe/deploy/env.md#deploy-env) – Configure .env file
+  * [deploy:shared](/docs/recipe/deploy/shared.md#deploy-shared) – Creates symlinks for shared files and dirs
+  * [deploy:writable](/docs/recipe/deploy/writable.md#deploy-writable) – Makes writable dirs
+* [deploy:vendors](/docs/recipe/deploy/vendors.md#deploy-vendors) – Installs vendors
+* [deploy:publish](/docs/recipe/common.md#deploy-publish) – Publishes the release
+  * [deploy:symlink](/docs/recipe/deploy/symlink.md#deploy-symlink) – Creates symlink to release
+  * [deploy:unlock](/docs/recipe/deploy/lock.md#deploy-unlock) – Unlocks deploy
+  * [deploy:cleanup](/docs/recipe/deploy/cleanup.md#deploy-cleanup) – Cleanup old releases
+  * [deploy:success](/docs/recipe/common.md#deploy-success) – Deploys your project
 
 
 The typo3 recipe is based on the [common](/docs/recipe/common.md) recipe.
 
 ## Configuration
 ### typo3_webroot
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L11)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L12)
 
 DocumentRoot / WebRoot for the TYPO3 installation
 
@@ -58,7 +59,7 @@ DocumentRoot / WebRoot for the TYPO3 installation
 
 
 ### shared_dirs
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L26)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L27)
 
 Overrides [shared_dirs](/docs/recipe/deploy/shared.md#shared_dirs) from `recipe/deploy/shared.php`.
 
@@ -68,13 +69,13 @@ Shared directories
 [
     '{{typo3_webroot}}/fileadmin',
     '{{typo3_webroot}}/typo3temp',
-    '{{typo3_webroot}}/uploads'
+    '{{typo3_webroot}}/uploads',
 ]
 ```
 
 
 ### shared_files
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L35)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L36)
 
 Overrides [shared_files](/docs/recipe/deploy/shared.md#shared_files) from `recipe/deploy/shared.php`.
 
@@ -82,13 +83,13 @@ Shared files
 
 ```php title="Default value"
 [
-    '{{typo3_webroot}}/.htaccess'
+    '{{typo3_webroot}}/.htaccess',
 ]
 ```
 
 
 ### writable_dirs
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L42)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L43)
 
 Overrides [writable_dirs](/docs/recipe/deploy/writable.md#writable_dirs) from `recipe/deploy/writable.php`.
 
@@ -99,7 +100,7 @@ Writeable directories
     '{{typo3_webroot}}/fileadmin',
     '{{typo3_webroot}}/typo3temp',
     '{{typo3_webroot}}/typo3conf',
-    '{{typo3_webroot}}/uploads'
+    '{{typo3_webroot}}/uploads',
 ]
 ```
 
@@ -107,8 +108,8 @@ Writeable directories
 
 ## Tasks
 
-### deploy
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L17)
+### deploy {#deploy}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/typo3.php#L18)
 
 Deploys your project.
 
@@ -116,8 +117,8 @@ Main TYPO3 task
 
 
 This task is group task which contains next tasks:
-* [deploy:prepare](/docs/recipe/common.md#deployprepare)
-* [deploy:vendors](/docs/recipe/deploy/vendors.md#deployvendors)
-* [deploy:publish](/docs/recipe/common.md#deploypublish)
+* [deploy:prepare](/docs/recipe/common.md#deploy-prepare)
+* [deploy:vendors](/docs/recipe/deploy/vendors.md#deploy-vendors)
+* [deploy:publish](/docs/recipe/common.md#deploy-publish)
 
 

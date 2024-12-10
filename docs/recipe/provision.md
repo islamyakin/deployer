@@ -14,11 +14,12 @@ require 'recipe/provision.php';
   * [databases](/docs/recipe/provision/databases.md)
   * [nodejs](/docs/recipe/provision/nodejs.md)
   * [php](/docs/recipe/provision/php.md)
+  * [user](/docs/recipe/provision/user.md)
   * [website](/docs/recipe/provision/website.md)
 
 ## Configuration
 ### lsb_release
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L15)
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L19)
 
 Name of lsb_release like: focal, bionic, etc.
 As only Ubuntu 20.04 LTS is supported for provision should be the `focal`.
@@ -28,32 +29,21 @@ return run("lsb_release -s -c");
 ```
 
 
-### sudo_password
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L216)
+### provision_user
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L43)
 
-
-
-```php title="Default value"
-return askHiddenResponse(' Password for sudo: ');
-```
-
-
-### ssh_copy_id
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L222)
-
-Specify which key to copy to server.
-Set to `false` to disable copy of key.
+Default user to use for provisioning.
 
 ```php title="Default value"
-'~/.ssh/id_rsa.pub'
+'root'
 ```
 
 
 
 ## Tasks
 
-### provision
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L20)
+### provision {#provision}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L24)
 
 Provision the server.
 
@@ -61,97 +51,81 @@ Provision the server.
 
 
 This task is group task which contains next tasks:
-* [provision:check](/docs/recipe/provision.md#provisioncheck)
-* [provision:configure](/docs/recipe/provision.md#provisionconfigure)
-* [provision:update](/docs/recipe/provision.md#provisionupdate)
-* [provision:upgrade](/docs/recipe/provision.md#provisionupgrade)
-* [provision:install](/docs/recipe/provision.md#provisioninstall)
-* [provision:ssh](/docs/recipe/provision.md#provisionssh)
-* [provision:firewall](/docs/recipe/provision.md#provisionfirewall)
-* [provision:deployer](/docs/recipe/provision.md#provisiondeployer)
-* [provision:server](/docs/recipe/provision.md#provisionserver)
-* [provision:php](/docs/recipe/provision/php.md#provisionphp)
-* [provision:databases](/docs/recipe/provision/databases.md#provisiondatabases)
-* [provision:composer](/docs/recipe/provision/php.md#provisioncomposer)
-* [provision:npm](/docs/recipe/provision/nodejs.md#provisionnpm)
-* [provision:website](/docs/recipe/provision/website.md#provisionwebsite)
-* [provision:verify](/docs/recipe/provision.md#provisionverify)
+* [provision:check](/docs/recipe/provision.md#provision-check)
+* [provision:configure](/docs/recipe/provision.md#provision-configure)
+* [provision:update](/docs/recipe/provision.md#provision-update)
+* [provision:upgrade](/docs/recipe/provision.md#provision-upgrade)
+* [provision:install](/docs/recipe/provision.md#provision-install)
+* [provision:ssh](/docs/recipe/provision.md#provision-ssh)
+* [provision:firewall](/docs/recipe/provision.md#provision-firewall)
+* [provision:user](/docs/recipe/provision/user.md#provision-user)
+* [provision:php](/docs/recipe/provision/php.md#provision-php)
+* [provision:node](/docs/recipe/provision/nodejs.md#provision-node)
+* [provision:databases](/docs/recipe/provision/databases.md#provision-databases)
+* [provision:composer](/docs/recipe/provision/php.md#provision-composer)
+* [provision:server](/docs/recipe/provision/website.md#provision-server)
+* [provision:website](/docs/recipe/provision/website.md#provision-website)
+* [provision:verify](/docs/recipe/provision.md#provision-verify)
 
 
-### provision:check
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L39)
+### provision\:check {#provision-check}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L46)
 
 Checks pre-required state.
 
 
 
 
-### provision:configure
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L59)
+### provision\:configure {#provision-configure}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L71)
 
 Collects required params.
 
 
 
 
-### provision:update
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L82)
+### provision\:update {#provision-update}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L123)
 
 Adds repositories and update.
 
 
 
 
-### provision:upgrade
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L104)
+### provision\:upgrade {#provision-upgrade}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L140)
 
 Upgrades all packages.
 
 
 
 
-### provision:install
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L111)
+### provision\:install {#provision-install}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L148)
 
 Installs packages.
 
 
 
 
-### provision:server
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L145)
-
-Configures a server.
-
-
-
-
-### provision:ssh
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L206)
+### provision\:ssh {#provision-ssh}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L183)
 
 Configures the ssh.
 
 
 
 
-### provision:deployer
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L225)
-
-Setups a deployer user.
-
-
-
-
-### provision:firewall
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L272)
+### provision\:firewall {#provision-firewall}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L195)
 
 Setups a firewall.
 
 
 
 
-### provision:verify
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L280)
+### provision\:verify {#provision-verify}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/provision.php#L204)
 
 Verifies what provision was successful.
 

@@ -1,5 +1,12 @@
 # Upgrade a major version
 
+## Upgrade from 7.x to 8.x
+
+- `run()` and `runLocally()` doesn't accept `options` parameter anymore. Use named arguments instead.
+   - `no_throw` is now `nothrow`.
+   - `real_time_output` is now `forceOutput`.
+   - `idle_timeout` is now `idleTimeout`.
+
 ## Upgrade from 6.x to 7.x
 
 ### Step 1: Update deploy.php
@@ -77,7 +84,7 @@
     ```
 11. Replace `local()` tasks with combination of `once()` and `runLocally()` func.
 12. Replace `locateBinaryPath()` with `which()` func.
-13. Configuration property `default_stage` is not supported anymore and has been dropped.
+13. Replace `default_stage` with `default_selector`, and adjust the value accordingly (for example: "prod" to "stage=prod").
 14. Replace `onHosts()` and `onStage()` with [labels & selectors](selector.md).
 15. Replace `setPrivate()` with [`hidden()`](tasks.md#hidden).
 16. Configuration property `writable_recursive` defaults to `false`. This behaviour can be overridden with:

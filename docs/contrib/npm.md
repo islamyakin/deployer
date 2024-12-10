@@ -13,22 +13,23 @@ require 'contrib/npm.php';
 
 
 ## Configuration
-
 - `bin/npm` *(optional)*: set npm binary, automatically detected otherwise.
-
 ## Usage
-
 ```php
 after('deploy:update_code', 'npm:install');
 ```
 
 
-
 ## Configuration
 ### bin/npm
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/npm.php#L16)
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/npm.php#L17)
 
-
+## Configuration
+- `bin/npm` *(optional)*: set npm binary, automatically detected otherwise.
+## Usage
+```php
+after('deploy:update_code', 'npm:install');
+```
 
 ```php title="Default value"
 return which('npm');
@@ -38,8 +39,8 @@ return which('npm');
 
 ## Tasks
 
-### npm:install
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/npm.php#L26)
+### npm\:install {#npm-install}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/npm.php#L27)
 
 Installs npm packages.
 

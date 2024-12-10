@@ -7,7 +7,7 @@
 
 namespace Deployer;
 
-use Deployer\Configuration\Configuration;
+use Deployer\Configuration;
 use Deployer\Host\Host;
 use Deployer\Host\Localhost;
 use Deployer\Task\Context;
@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\Output;
+
 use function Deployer\localhost;
 
 class FunctionsTest extends TestCase
@@ -69,8 +70,7 @@ class FunctionsTest extends TestCase
 
     public function testTask()
     {
-        task('task', function () {
-        });
+        task('task', function () {});
 
         $task = $this->deployer->tasks->get('task');
         self::assertInstanceOf(Task::class, $task);
@@ -81,9 +81,6 @@ class FunctionsTest extends TestCase
         task('group', ['task']);
         $task = $this->deployer->tasks->get('group');
         self::assertInstanceOf(GroupTask::class, $task);
-
-        $task = task('callable', [$this, __METHOD__]);
-        self::assertInstanceOf(Task::class, $task);
     }
 
     public function testBefore()
@@ -112,21 +109,6 @@ class FunctionsTest extends TestCase
     {
         $output = runLocally('echo "hello"');
         self::assertEquals('hello', $output);
-    }
-
-    public function testRunLocallyWithOptions()
-    {
-        Context::get()->getConfig()->set('env', ['DEPLOYER_ENV' => 'default', 'DEPLOYER_ENV_TMP' => 'default']);
-
-        $output = runLocally('echo $DEPLOYER_ENV');
-        self::assertEquals('default', $output);
-        $output = runLocally('echo $DEPLOYER_ENV_TMP');
-        self::assertEquals('default', $output);
-
-        $output = runLocally('echo $DEPLOYER_ENV', ['env' => ['DEPLOYER_ENV_TMP' => 'overwritten']]);
-        self::assertEquals('default', $output);
-        $output = runLocally('echo $DEPLOYER_ENV_TMP', ['env' => ['DEPLOYER_ENV_TMP' => 'overwritten']]);
-        self::assertEquals('overwritten', $output);
     }
 
     public function testWithinSetsWorkingPaths()
@@ -161,7 +143,7 @@ class FunctionsTest extends TestCase
     public function testWithinReturningValue()
     {
         $output = within('/foo', function () {
-           return 'bar';
+            return 'bar';
         });
 
         self::assertEquals('bar', $output);

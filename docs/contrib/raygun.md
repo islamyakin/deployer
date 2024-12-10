@@ -12,9 +12,7 @@ require 'contrib/raygun.php';
 
 
 
-
 ## Configuration
-
 - `raygun_api_key` – the API key of your Raygun application
 - `raygun_version` – the version of your application that this deployment is releasing
 - `raygun_owner_name` – the name of the person creating this deployment
@@ -22,11 +20,8 @@ require 'contrib/raygun.php';
 - `raygun_comment` – the deployment notes
 - `raygun_scm_identifier` – the commit that this deployment was built off
 - `raygun_scm_type` - the source control system you use
-
 ## Usage
-
 To notify Raygun of a successful deployment, you can use the 'raygun:notify' task after a deployment.
-
 ```php
 after('deploy', 'raygun:notify');
 ```
@@ -35,8 +30,8 @@ after('deploy', 'raygun:notify');
 
 ## Tasks
 
-### raygun:notify
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/raygun.php#L27)
+### raygun\:notify {#raygun-notify}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/raygun.php#L28)
 
 Notifies Raygun of deployment.
 

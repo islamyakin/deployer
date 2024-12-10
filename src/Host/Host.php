@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -8,11 +10,12 @@
 
 namespace Deployer\Host;
 
-use Deployer\Configuration\Configuration;
+use Deployer\Configuration;
 use Deployer\Deployer;
 use Deployer\Exception\ConfigurationException;
 use Deployer\Exception\Exception;
 use Deployer\Task\Context;
+
 use function Deployer\Support\colorize_host;
 use function Deployer\Support\parse_home_dir;
 
@@ -195,6 +198,17 @@ class Host
         return $this->config->get('shell', null);
     }
 
+    public function setShellPath(string $path): self
+    {
+        $this->config->set('shell_path', $path);
+        return $this;
+    }
+
+    public function getShellPath(): ?string
+    {
+        return $this->config->get('shell_path', null);
+    }
+
     public function setDeployPath(string $path): self
     {
         $this->config->set('deploy_path', $path);
@@ -209,6 +223,13 @@ class Host
     public function setLabels(array $labels): self
     {
         $this->config->set('labels', $labels);
+        return $this;
+    }
+
+    public function addLabels(array $labels): self
+    {
+        $existingLabels = $this->getLabels() ?? [];
+        $this->setLabels(array_replace_recursive($existingLabels, $labels));
         return $this;
     }
 

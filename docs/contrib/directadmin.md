@@ -30,51 +30,50 @@ require 'contrib/directadmin.php';
 
 
 
-
 ## Tasks
 
-### directadmin:createdb
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L74)
+### directadmin\:createdb {#directadmin-createdb}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L76)
 
 Creates a database on DirectAdmin.
 
 
 
 
-### directadmin:deletedb
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L94)
+### directadmin\:deletedb {#directadmin-deletedb}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L96)
 
 Deletes a database on DirectAdmin.
 
 
 
 
-### directadmin:createdomain
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L109)
+### directadmin\:createdomain {#directadmin-createdomain}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L111)
 
 Creates a domain on DirectAdmin.
 
 
 
 
-### directadmin:deletedomain
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L127)
+### directadmin\:deletedomain {#directadmin-deletedomain}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L129)
 
 Deletes a domain on DirectAdmin.
 
 
 
 
-### directadmin:symlink-private-html
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L143)
+### directadmin\:symlink-private-html {#directadmin-symlink-private-html}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L145)
 
 Symlink your private_html to public_html.
 
 
 
 
-### directadmin:php-version
-[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L159)
+### directadmin\:php-version {#directadmin-php-version}
+[Source](https://github.com/deployphp/deployer/blob/master/contrib/directadmin.php#L161)
 
 Changes the PHP version from a domain.
 

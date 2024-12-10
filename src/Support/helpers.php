@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* (c) Anton Medvedev <anton@medv.io>
  *
@@ -8,13 +10,7 @@
 
 namespace Deployer\Support;
 
-/**
- * Flatten array
- *
- * @param array $array
- * @return array
- */
-function array_flatten(array $array)
+function array_flatten(array $array): array
 {
     $flatten = [];
     array_walk_recursive($array, function ($value) use (&$flatten) {
@@ -29,13 +25,8 @@ function array_flatten(array $array)
  * 1. scalar values are overridden
  * 2. array values are extended uniquely if all keys are numeric
  * 3. all other array values are merged
- *
- * @param array $original
- * @param array $override
- * @return array
- * @see http://stackoverflow.com/a/36366886/6812729
  */
-function array_merge_alternate(array $original, array $override)
+function array_merge_alternate(array $original, array $override): array
 {
     foreach ($override as $key => $value) {
         if (isset($original[$key])) {
@@ -63,42 +54,18 @@ function array_merge_alternate(array $original, array $override)
     return $original;
 }
 
-/**
- * Determines if the given string contains the given value.
- */
-function str_contains(string $haystack, string $needle): bool
-{
-    return strpos($haystack, $needle) !== false;
-}
-
-/**
- * Checks if string stars with given prefix.
- */
-function starts_with(string $string, string $startString): bool
-{
-    $len = strlen($startString);
-    return (substr($string, 0, $len) === $startString);
-}
-
-/**
- * This function used for create environment string.
- */
 function env_stringify(array $array): string
 {
     return implode(' ', array_map(
         function ($key, $value) {
-            return sprintf("%s=%s", $key, escapeshellarg((string)$value));
+            return sprintf("%s=%s", $key, escapeshellarg((string) $value));
         },
         array_keys($array),
-        $array
+        $array,
     ));
 }
 
-/**
- * Check if var is closure.
- * @param mixed $var
- */
-function is_closure($var): bool
+function is_closure(mixed $var): bool
 {
     return is_object($var) && ($var instanceof \Closure);
 }
@@ -129,7 +96,7 @@ function normalize_line_endings(string $string): string
  */
 function parse_home_dir(string $path): string
 {
-    if ('~' === $path || 0 === strpos($path, '~/')) {
+    if ('~' === $path || str_starts_with($path, '~/')) {
         if (isset($_SERVER['HOME'])) {
             $home = $_SERVER['HOME'];
         } elseif (isset($_SERVER['HOMEDRIVE'], $_SERVER['HOMEPATH'])) {
@@ -152,18 +119,6 @@ function find_line_number(string $source, string $string): int
         return count(explode(PHP_EOL, $before));
     }
     return 1;
-}
-
-function find_config_line(string $source, string $name): \Generator
-{
-    foreach (explode(PHP_EOL, $source) as $n => $line) {
-        if (preg_match("/\(['\"]{$name}['\"]/", $line)) {
-            yield [$n + 1, $line];
-        }
-        if (preg_match("/\s{$name}:/", $line)) {
-            yield [$n + 1, $line];
-        }
-    }
 }
 
 function colorize_host(string $alias): string
@@ -251,4 +206,22 @@ function colorize_host(string $alias): string
     ];
     $tag = $colors[abs(crc32($alias)) % count($colors)];
     return "<$tag>$alias</>";
+}
+
+function escape_shell_argument(string $argument): string
+{
+    return "'" . str_replace("'", "'\\''", $argument) . "'";
+}
+
+function deployer_root(): string
+{
+    if (getenv('DEPLOYER_ROOT') !== false) {
+        return getenv('DEPLOYER_ROOT');
+    } else {
+        if (defined('DEPLOYER_DEPLOY_FILE')) {
+            return dirname(DEPLOYER_DEPLOY_FILE);
+        } else {
+            return getcwd();
+        }
+    }
 }

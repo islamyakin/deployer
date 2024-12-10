@@ -14,8 +14,8 @@ require 'recipe/deploy/check_remote.php';
 
 ## Tasks
 
-### deploy:check_remote
-[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/check_remote.php#L10)
+### deploy\:check_remote {#deploy-check_remote}
+[Source](https://github.com/deployphp/deployer/blob/master/recipe/deploy/check_remote.php#L11)
 
 Checks remote head.
 
